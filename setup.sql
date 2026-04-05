@@ -4,25 +4,19 @@
 -- Costa Rica 🇨🇷
 -- ============================================
 -- 
--- INSTRUCCIONES:
--- 1. Crea una base de datos MySQL (o deja que este script la cree)
--- 2. Importa este archivo desde phpMyAdmin o CLI:
---    mysql -u usuario -p < setup.sql
--- 3. O usa install.php desde el navegador
+-- INSTRUCCIONES HOSTING (Hostinger, cPanel, etc):
+-- 1. Crea la base de datos desde el panel (hPanel > MySQL)
+-- 2. Selecciona esa DB en phpMyAdmin
+-- 3. Pestaña "Importar" > sube este archivo
+-- 4. Listo! Las tablas + admin + equipos se crean solos
+--
+-- O simplemente accede a install.php desde el navegador
+-- (después de configurar config.php)
 -- ============================================
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
-
--- ============================================
--- CREAR BASE DE DATOS
--- ============================================
-CREATE DATABASE IF NOT EXISTS interliga_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-USE interliga_db;
 
 -- ============================================
 -- TABLAS PRINCIPALES
@@ -169,16 +163,9 @@ INSERT INTO equipos (nombre, logo_emoji) VALUES
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================
--- NOTAS DE DEPLOY
--- ============================================
--- 
--- En hosting compartido (Hostinger, etc):
--- 1. Crear base de datos desde el panel (hPanel > MySQL)
--- 2. Anotar: host, nombre_db, usuario, contraseña
--- 3. Editar config.php con esos datos
--- 4. Importar este archivo desde phpMyAdmin
--- 5. O acceder a install.php desde el navegador
--- 
--- El hash del admin se genera automáticamente
--- via install.php - no necesitas tocarlo aquí.
+-- PRONTO! 🎉
+-- Tablas: jornadas, partidos, inscripciones,
+--         lista_espera, admins, equipos,
+--         resultados, audit_log
+-- Admin:  admin / interliga2024
 -- ============================================

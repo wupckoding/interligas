@@ -1,40 +1,32 @@
 <?php
 /**
  * INTERLIGA - Instalador automático
- * Ejecutar una sola vez: http://localhost/interliga/install.php
- * Crea la base de datos, tablas y usuario admin por defecto.
+ * Ejecutar una sola vez desde el navegador.
+ * Crea tablas y usuario admin usando las credenciales de config.php
+ * 
+ * En hosting compartido (Hostinger, etc):
+ * 1. Crear la base de datos manualmente desde hPanel
+ * 2. Configurar config.php con los datos reales
+ * 3. Acceder a install.php desde el navegador
  */
 
-$host    = 'localhost';
-$user    = 'root';
-$pass    = '';
-$dbname  = 'interliga_db';
-$charset = 'utf8mb4';
+require_once __DIR__ . '/config.php';
 
 $messages = [];
 $success  = true;
 
 try {
-    // Conectar sin base de datos
-    $pdo = new PDO("mysql:host=$host;charset=$charset", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    ]);
-
-    // Crear base de datos
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-    $messages[] = "✅ Base de datos '$dbname' creada/verificada.";
-
-    // Seleccionar DB
-    $pdo->exec("USE `$dbname`");
+    $pdo = getDB();
+    $messages[] = "✅ Conexión a la base de datos exitosa.";
 
     // Leer y ejecutar SQL
     $sql = file_get_contents(__DIR__ . '/setup.sql');
-    // Remover las líneas CREATE DATABASE y USE
-    $sql = preg_replace('/CREATE DATABASE.*?;/s', '', $sql);
-    $sql = preg_replace('/USE\s+\w+;/s', '', $sql);
+    // Remover CREATE DATABASE y USE (ya estamos conectados)
+    $sql = preg_replace('/CREATE DATABASE.*?;/si', '', $sql);
+    $sql = preg_replace('/USE\s+\S+;/si', '', $sql);
 
     $pdo->exec($sql);
-    $messages[] = "✅ Tablas creadas correctamente.";
+    $messages[] = "✅ Tablas creadas correctamente (8 tablas).";
 
     // Crear admin por defecto si no existe
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM admins WHERE usuario = ?");
